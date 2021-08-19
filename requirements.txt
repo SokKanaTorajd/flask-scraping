@@ -1,4 +1,5 @@
 flask
+flask-cors
 facebook-scraper
 gunicorn
 instaloader
