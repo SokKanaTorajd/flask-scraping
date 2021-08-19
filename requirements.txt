@@ -1,0 +1,5 @@
+flask
+facebook-scraper
+gunicorn
+instaloader
+pymongo[tls,srv]
