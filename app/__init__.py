@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template
 from flask_cors import CORS
 from app.models.instagram import InstagramScraper
 from app.models.dbmodel import MongoDBModel
@@ -25,7 +25,7 @@ fb = FacebookScraper()
 # index
 @app.route('/')
 def index():
-    return "test scraping facebook dan instagram"
+    return render_template('index.html')
 
 
 # get instagram profile
