@@ -50,7 +50,7 @@ def profilePostIG(username):
 
 
 # get instagram hashtag post
-@app.route('/instagram/post/hashtag/<hashtag_name>', method=['GET'])
+@app.route('/instagram/post/hashtag/<hashtag_name>', methods=['GET'])
 def hashtagPostIG(hashtag_name):
     if request.method == 'GET':
         posts = ig.getHashtagPost(hashtag_name)
