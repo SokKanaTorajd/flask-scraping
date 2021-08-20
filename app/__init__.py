@@ -72,23 +72,23 @@ def profileFB(username):
         return jsonify({'status': 'OK!'})
 
 
-# get page post
-@app.route('/facebook/page/<page_name>', methods=['GET'])
-def pageFB(page_name):
-    if request.method == 'GET':
-        posts = fb.scrape_page(page_name, posts_per_page=5)
-        for post in posts:
-            mongo.insertByOne(page_post, post)
+# # get page post
+# @app.route('/facebook/page/<page_name>', methods=['GET'])
+# def pageFB(page_name):
+#     if request.method == 'GET':
+#         posts = fb.scrape_page(page_name, posts_per_page=5)
+#         for post in posts:
+#             mongo.insertByOne(page_post, post)
 
-        return jsonify({'status': 'OK!'})
+#         return jsonify({'status': 'OK!'})
 
 
-# get group post
-@app.route('/facebook/group/<group_name>', methods=['GET'])
-def pageFB(group_name):
-    if request.method == 'GET':
-        posts = fb.scrape_group(group_name, posts_per_page=5)
-        for post in posts:
-            mongo.insertByOne(page_post, post)
+# # get group post
+# @app.route('/facebook/group/<group_name>', methods=['GET'])
+# def pageFB(group_name):
+#     if request.method == 'GET':
+#         posts = fb.scrape_group(group_name, posts_per_page=5)
+#         for post in posts:
+#             mongo.insertByOne(page_post, post)
 
-        return jsonify({'status': 'OK!'})
+#         return jsonify({'status': 'OK!'})
