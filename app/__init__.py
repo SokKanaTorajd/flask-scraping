@@ -1,9 +1,9 @@
 from flask import Flask, jsonify, request, render_template
-from flask_cors import CORS
 from app.models.instagram import InstagramScraper
 from app.models.dbmodel import MongoDBModel
 from app.models.facebook import FacebookScraper
 from app.models import config
+from flask_cors import CORS
 
 
 app = Flask(__name__)
