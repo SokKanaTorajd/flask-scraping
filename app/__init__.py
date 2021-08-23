@@ -1,26 +1,10 @@
-from flask import Flask, jsonify, request, render_template
-from app.models.instagram import InstagramScraper
-from app.models.dbmodel import MongoDBModel
-from app.models.facebook import FacebookScraper
-from app.models import config
+from flask import Flask, request, render_template
+from app.tasks.instagram_scraper import ig_profile, ig_user_post, ig_hashtag_post
+from app.tasks.facebook_scraper import fb_profile, fb_page_post, fb_group_post
 from flask_cors import CORS
-
 
 app = Flask(__name__)
 CORS(app)
-
-
-db_name = 'kecilin-intern'
-ig_profile = 'instagram-profile'
-ig_post = 'instagram-post'
-hashtag_post = 'hashtag-post'
-fb_profile = 'facebook-profile'
-group_post = 'facebook-group-post'
-page_post = 'facebook-page-post'
-
-mongo = MongoDBModel(db_name, URI=config.URI)
-ig = InstagramScraper()
-fb = FacebookScraper()
 
 # index
 @app.route('/')
@@ -28,67 +12,49 @@ def index():
     return render_template('index.html')
 
 
-# get instagram profile
+# # get instagram profile
 @app.route('/instagram/profile/<username>',methods=['GET'])
 def profileIG(username):
     if request.method == 'GET':
-        profile = ig.getProfileInfo(username)
-        mongo.insertByOne(ig_profile, profile)
-
-        return jsonify({'status': 'OK!'})
+        ig_profile.delay(username)
+        return 'scraping instagram profile {} is in progress'.format(username)
 
 
 # get instagram profile post
 @app.route('/instagram/post/<username>', methods=['GET'])
 def profilePostIG(username):
     if request.method == 'GET':
-        posts = ig.getProfilePost(username, limit=20)
-        for post in posts:
-            mongo.insertByOne(ig_post, post)
-
-        return jsonify({'status': 'OK!'})
+        ig_user_post.delay(username)
+        return 'scraping instagram posts of {} is in progress.'.format(username)
 
 
 # get instagram hashtag post
 @app.route('/instagram/post/hashtag/<hashtag_name>', methods=['GET'])
 def hashtagPostIG(hashtag_name):
     if request.method == 'GET':
-        posts = ig.getHashtagPost(hashtag_name)
-        for post in posts:
-            comments = ig.getPostComments(post['shortcode'])
-            post['comments'] = comments
-            mongo.insertByOne(hashtag_post, post)
-        
-        return jsonify({'status': 'OK!'})
+        ig_hashtag_post.delay(hashtag_name)
+        return 'scraping instagram posts of hashtag {} is in progress.'.format(hashtag_name)
 
 
 # get facebook profile info
 @app.route('/facebook/profile/<username>', methods=['GET'])
 def profileFB(username):
     if request.method == 'GET':
-        profile = fb.scrape_profile(username)
-        mongo.insertByOne(fb_profile, profile)
-        
-        return jsonify({'status': 'OK!'})
+        fb_profile.delay(username)
+        return 'scraping facebook profile of {} is in progress.'.format(username)
 
 
 # get page post
 @app.route('/facebook/page/<page_name>', methods=['GET'])
 def pageFB(page_name):
     if request.method == 'GET':
-        posts = fb.scrape_page(page_name, posts_per_page=5)
-        for post in posts:
-            mongo.insertByOne(page_post, post)
-
-        return jsonify({'status': 'OK!'})
+        fb_page_post.delay(page_name)
+        return 'scraping facebook page posts of {} is in progress.'.format(page_name)
 
 
 # get group post
 @app.route('/facebook/group/<group_name>', methods=['GET'])
 def groupFB(group_name):
     if request.method == 'GET':
-        posts = fb.scrape_group(group_name, posts_per_page=5)
-        for post in posts:
-            mongo.insertByOne(page_post, post)
-
-        return jsonify({'status': 'OK!'})
+        fb_group_post.delay(group_name)
+        return 'scraping facebook group posts of {} is in progress.'.format(group_name)
