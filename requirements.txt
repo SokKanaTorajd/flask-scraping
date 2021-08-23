@@ -1,3 +1,4 @@
+celery
 flask
 flask-cors
 facebook-scraper
