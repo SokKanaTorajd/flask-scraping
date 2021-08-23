@@ -1,6 +1,16 @@
 import os
 
-URI = os.environ.get('MONGODB_URI')
+BROKER_URL=os.environ.get('MONGODB_URI')
+MONGODB_URI = os.environ.get('MONGODB_URI')
+DB_NAME = 'kecilin-intern'
+
+IG_PROFILE_COLL = 'instagram-profile'
+IG_PROFILE_POST_COLL = 'instagram-post'
+IG_HASHTAG_POST_COLL = 'instagram-hashtag-post'
+
+FB_PROFILE_COLL = 'facebook-profile'
+FB_PAGE_POST_COLL = 'facebook-page-post'
+FB_GROUP_POST_COLL = 'facebook-group-post'
 
 IG_USERNAME = os.environ.get("IG_USER")
 IG_PASS = os.environ.get('IG_PASS')
