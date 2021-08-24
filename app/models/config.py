@@ -1,8 +1,8 @@
 import os
 
-BROKER_URL=os.environ.get('MONGODB_URI')
+BROKER_URL = os.environ.get('BROKER_URI')
 MONGODB_URI = os.environ.get('MONGODB_URI')
-DB_NAME = 'kecilin-intern'
+DB_NAME = os.environ.get('DB_NAME')
 
 IG_PROFILE_COLL = 'instagram-profile'
 IG_PROFILE_POST_COLL = 'instagram-post'
