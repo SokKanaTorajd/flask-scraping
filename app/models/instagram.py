@@ -11,8 +11,6 @@ This scripts is based on https://github.com/instaloader/instaloader.
 class InstagramScraper():
     loader = Instaloader()
     loader.login(config.IG_USERNAME, config.IG_PASS)
-    # def loginInstaloader(username, password):
-    #     return InstagramScraper.loader.login(username, password)
 
     def getProfileInfo(self, target_username):
         """

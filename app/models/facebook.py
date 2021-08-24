@@ -8,9 +8,6 @@ This scripts is based on https://github.com/kevinzg/facebook-scraper
 
 class FacebookScraper():
 
-    # _scraper = FacebookScraper()
-    # _scraper.login(config.FB_EMAIL, config.FB_PASS)
-
     def scrape_profile(self, username):
         """
             Get facebook profile info. cannot get friend's count. 
