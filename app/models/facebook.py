@@ -1,10 +1,16 @@
+# from facebook_scraper.facebook_scraper import FacebookScraper
 from facebook_scraper import get_posts, get_profile
+from app.models import config
 
 """
 This scripts is based on https://github.com/kevinzg/facebook-scraper
 """
 
 class FacebookScraper():
+
+    # _scraper = FacebookScraper()
+    # _scraper.login(config.FB_EMAIL, config.FB_PASS)
+
     def scrape_profile(self, username):
         """
             Get facebook profile info. cannot get friend's count. 
@@ -40,6 +46,7 @@ class FacebookScraper():
                 - posts_per_page: to request how many posts return in a single page. default 10 posts. Integer format.
             Returns page's post with limited amounts in Facebook_Scraper format.
         """
-        posts = get_posts(group=group_name, page_limit=page, timeout=timeout, 
+        posts = get_posts(group=group_name, credentials=(config.FB_EMAIL, config.FB_PASS), 
+                            page_limit=page, timeout=timeout, 
                             options={'comments': with_comments, 'posts_per_page':posts_per_page})
         return posts
