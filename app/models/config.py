@@ -14,3 +14,5 @@ FB_GROUP_POST_COLL = 'facebook-group-post'
 
 IG_USERNAME = os.environ.get("IG_USER")
 IG_PASS = os.environ.get('IG_PASS')
+FB_EMAIL = os.environ.get('FB_EMAIL')
+FB_PASS = os.environ.get('FB_PASS')
