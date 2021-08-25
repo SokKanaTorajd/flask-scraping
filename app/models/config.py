@@ -2,6 +2,7 @@ import os
 
 BROKER_URL = os.environ.get('BROKER_URI')
 MONGODB_URI = os.environ.get('MONGODB_URI')
+BACKEND_URI = os.environ.get('BACKEND_URI')
 DB_NAME = os.environ.get('DB_NAME')
 
 IG_PROFILE_COLL = 'instagram-profile'
