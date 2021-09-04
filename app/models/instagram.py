@@ -9,28 +9,25 @@ This scripts is based on https://github.com/instaloader/instaloader.
 """
 
 class InstagramScraper():
-    loader = Instaloader()
-    loader.login(config.IG_USERNAME, config.IG_PASS)
 
-    def getProfileInfo(self, target_username):
-        """
-            - args:
-                - target_username : username target untuk mengambil data profil. format str
-            - output:
-                - objek dictionary berisikan metadata profil target
-        """
-        profile = Profile.from_username(self.loader.context, target_username)
-        sleep(10)
-        data = {
-            'userid': profile.userid, #str
-            'username': profile.username, #str
-            'biography' : profile.biography, #str
-            'media_count' : profile.mediacount, #int
-            'followers_count' : profile.followers, #int
-            'following_count' : profile.followees, # int
-            'profile_pic_url' : profile.profile_pic_url #str
-        }
-        return data
+    def __init__(self):
+        self.loader = Instaloader()
+
+
+    def loginInstaloader(self, username, password):
+        
+        if self.loader.test_login() == username:
+            filename = './app/models/{}_session'.format(username)
+            return self.loader.load_session_from_file(username=username, filename=filename)
+
+        if self.loader.test_login() != username:
+            # login to instagram account
+            self.loader.login(username, password)
+            # save logged in session into file. 
+            # format in requests.Session object, so there is no file extension.
+            filename = './app/models/{}_session'.format(username)
+            return self.loader.save_session_to_file(filename=filename)
+
 
     def getPostComments(self, shortcode, limit=50):
         """
@@ -60,11 +57,11 @@ class InstagramScraper():
         return scraped_comments
     
 
-    def getProfilePost(self, target_username, limit=20):
+    def getProfilePost(self, target_username, limit=24):
         """
             - args:
                 - target_username : username target untuk mengambil data postingan. format str
-                - limit : batasan jumlah posting yang diambil dari akun target. default 20.
+                - limit : batasan jumlah posting yang diambil dari akun target. default 24.
             - output:
                 - objek list berisikan metadata postingan target
         """
@@ -72,9 +69,10 @@ class InstagramScraper():
         sleep(3)
         posts = profile.get_posts()
         posts_data = list()
+        n = len(posts_data)
 
-        if len(posts_data) <= limit:
-            for post in posts:
+        for post in posts:
+            if n <= limit:
                 comments = self.getPostComments(post.shortcode)
                 post_data = {
                     'shortcode' : post.shortcode, #str
@@ -87,12 +85,13 @@ class InstagramScraper():
                     'comments' : comments # list
                 }
                 posts_data.append(post_data)
+                n = len(posts_data)
                 sleep(3)
 
         return posts_data
 
 
-    def getHashtagPost(self, hashtag_name, based_on='recent', post_limit=100):
+    def getHashtagPost(self, hashtag_name, based_on='recent', post_limit=120):
         """
             - args:
                 - hashtag_name : nama hashtag dalam format string. tidak perlu menyertakan simbol '#'.
@@ -110,9 +109,10 @@ class InstagramScraper():
         jsonData = self.loader.context.get_json(path=path, params={'__a': 1})
         hasNextPage = True
         hashtag_posts = list()
+        n = len(hashtag_posts)
 
         try:
-            while hasNextPage and (len(hashtag_posts) <= post_limit):
+            while hasNextPage and (n < post_limit):
                 for section in jsonData['data'][based_on]['sections']:
                     for post in section['layout_content']['medias']:
                         data = {
@@ -133,8 +133,8 @@ class InstagramScraper():
                             '__a':1, 
                             'max_id': jsonData['data'][based_on]['next_max_id']
                         })
-
-                print('move to next page', datetime.now())
+                        
+                n = len(hashtag_posts)
                 sleep(5)
 
             return hashtag_posts
